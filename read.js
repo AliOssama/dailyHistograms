@@ -1,8 +1,17 @@
 var dataSet= d3.json("classData.json");
 
+
 dataSet.then(function(d)
         {
+          var array= d.map( function(peng){
+
+            return peng.quizes[0].grade;
+
+          });
+          console.log(array)
+
           drawHistogram(d, 0);
+
 
         },
 
@@ -49,6 +58,9 @@ dataSet.then(function(d)
                     .nice()
                     .range([height,0])
 
+
+
+      //where's my data???
       var newData= d3.range(100)
                       .map(function(x){return dataSet;});
 
