@@ -22,58 +22,7 @@ dataSet.then(function(d)
 
        var drawHistogram= function(data, day, array)
       {
-        frequency=[0,0,0,0,0,0,0,0,0,0,0]
-        var count = array.forEach(function(d)
-      {
 
-        if (d == 0)
-        {
-          frequency[0]++;
-        }
-        if (d == 1)
-        {
-          frequency[1]++;
-        }
-        if (d == 2)
-        {
-          frequency[2]++;
-        }
-        if (d == 3)
-        {
-          frequency[3]++;
-        }
-        if (d == 4)
-        {
-          frequency[4]++;
-        }
-        if (d == 5)
-        {
-          frequency[5]++;
-        }
-        if (d == 6)
-        {
-          frequency[6]++;
-        }
-        if (d == 7)
-        {
-          frequency[7]++;
-        }
-        if (d == 8)
-        {
-          frequency[8]++;
-        }
-        if (d == 9)
-        {
-          frequency[9]++;
-        }
-        if (d == 10)
-        {
-          frequency[10]++;
-        }
-        return frequency;
-
-      })
-      console.log(frequency)
         var screen=
         {
             width: 500,
@@ -97,10 +46,8 @@ dataSet.then(function(d)
 
        var xScale= d3.scaleLinear()
                       .domain([0,10])
-                      .nice()
-                      .range([0,width]);
-
-
+                      .range([0,width])
+                      .nice();
 
 
       var binMaker= d3.histogram()
@@ -108,18 +55,18 @@ dataSet.then(function(d)
                       .thresholds(xScale.ticks(10));
 
 
-      var bins= binMaker(frequency);
+      var bins= binMaker(data);
       console.log("bins",bins);
 
-      var score= function(d)
+      var percentage= function(d)
       {
-        return d.length;
+        return d.length/array.length;
       }
 
       var yScale= d3.scaleLinear()
-                    .domain([0,23])
-                    .nice()
+                    .domain([0,d3.max(bins,function(d){return percentage(d);})])
                     .range([height,0])
+                    .nice();
 
 
 
@@ -138,8 +85,8 @@ dataSet.then(function(d)
                       .append("rect")
                       .attr("x",function(d){return xScale(d.x0)})
                       .attr("width", function(d){ return Math.abs(xScale(d.x1-0.1)-xScale(d.x0))})
-                      .attr("y", function(d){return yScale(score(d));})
-                      .attr("height", function(d){ return height-yScale(score(d));})
+                      .attr("y", function(d){return yScale(percentage(d));})
+                      .attr("height", function(d){ return height-yScale(percentage(d));})
 
 
 
